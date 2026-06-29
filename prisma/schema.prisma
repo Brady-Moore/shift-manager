@@ -11,3 +11,76 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum UserRole {
+  MANAGER
+  EMPLOYEE
+}
+
+enum ShiftRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum ShiftRequestType {
+  GIVE_AWAY
+  CLAIM_OPEN
+}
+
+model User {
+  id    String   @id @default(cuid())
+  name  String
+  email String   @unique
+  role  UserRole
+
+  assignedShifts Shift[] @relation("AssignedShifts")
+
+  shiftRequestsMade     ShiftRequest[] @relation("ShiftRequestRequester")
+  shiftRequestsClaimed  ShiftRequest[] @relation("ShiftRequestClaimer")
+  shiftRequestsReviewed ShiftRequest[] @relation("ShiftRequestReviewer")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Shift {
+  id        String   @id @default(cuid())
+  title     String
+  startTime DateTime
+  endTime   DateTime
+
+  assignedUserId String?
+  assignedUser   User?   @relation("AssignedShifts", fields: [assignedUserId], references: [id])
+
+  requests ShiftRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShiftRequest {
+  id String @id @default(cuid())
+
+  type   ShiftRequestType
+  status ShiftRequestStatus @default(PENDING)
+
+  shiftId String
+  shift   Shift  @relation(fields: [shiftId], references: [id])
+
+  requesterId String
+  requester   User   @relation("ShiftRequestRequester", fields: [requesterId], references: [id])
+
+  claimerId String?
+  claimer   User?   @relation("ShiftRequestClaimer", fields: [claimerId], references: [id])
+
+  reviewedById String?
+  reviewedBy   User?   @relation("ShiftRequestReviewer", fields: [reviewedById], references: [id])
+
+  reviewedAt  DateTime?
+  managerNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
