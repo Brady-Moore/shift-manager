@@ -31,9 +31,7 @@ export function OpenRequests({
       <div className="mt-4 space-y-3">
         {openShifts.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold text-slate-700">
-              Open Shifts
-            </h3>
+            <h3 className="text-lg font-semibold mt-3">Open Shifts</h3>
 
             <div className="mt-2 space-y-3">
               {openShifts.map((shift) => (
@@ -64,7 +62,7 @@ export function OpenRequests({
           </div>
         )}
       </div>
-      <h2 className="text-lg font-semibold">Open Requests</h2>
+      <h2 className="text-lg font-semibold mt-3">Open Requests</h2>
 
       <div className="mt-4 space-y-3">
         {openRequests.length === 0 ? (
@@ -91,7 +89,10 @@ export function OpenRequests({
               <form action={claimShift} className="mt-3">
                 <input type="hidden" name="shiftRequestId" value={request.id} />
 
-                <button type="submit" className="...">
+                <button
+                  type="submit"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
                   Claim Shift
                 </button>
               </form>
