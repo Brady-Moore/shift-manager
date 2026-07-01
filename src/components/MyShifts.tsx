@@ -1,4 +1,5 @@
 import type { CurrentUser, WeeklyShifts } from "@/app/dashboard/page";
+import { requestCoverage } from "@/app/actions/shiftRequests";
 
 type MyShiftsProps = {
   currentUser: CurrentUser;
@@ -30,12 +31,16 @@ export function MyShifts({ currentUser, shifts }: MyShiftsProps) {
                 {shift.startTime.toLocaleString()} –{" "}
                 {shift.endTime.toLocaleTimeString()}
               </p>
-              <button
-                type="button"
-                className="mt-3 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-              >
-                Request Coverage
-              </button>
+              <form action={requestCoverage} className="mt-3">
+                <input type="hidden" name="shiftId" value={shift.id} />
+
+                <button
+                  type="submit"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Request Coverage
+                </button>
+              </form>
             </article>
           ))
         )}
