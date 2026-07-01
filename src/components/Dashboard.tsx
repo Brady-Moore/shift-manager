@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { CurrentUser, DashboardData } from "@/app/dashboard/page";
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardNav } from "./DashboardNav";
+import { WeeklySchedule } from "./WeeklySchedule";
 
 type DashboardProps = {
   currentUser: CurrentUser;
@@ -11,7 +12,11 @@ type DashboardProps = {
   shiftRequests: DashboardData["shiftRequests"];
 };
 
-export function Dashboard({ currentUser }: DashboardProps) {
+export function Dashboard({
+  currentUser,
+  shifts,
+  shiftRequests,
+}: DashboardProps) {
   const defaultTab =
     currentUser.role === "MANAGER" ? "Pending Requests" : "My Shifts";
 
@@ -26,9 +31,13 @@ export function Dashboard({ currentUser }: DashboardProps) {
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h2 className="text-lg font-semibold">{activeTab} Placeholder</h2>
-        </section>
+        {activeTab === "Weekly Schedule" ? (
+          <WeeklySchedule shifts={shifts} />
+        ) : (
+          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <h2 className="text-lg font-semibold">{activeTab} Placeholder</h2>
+          </section>
+        )}
       </div>
     </main>
   );
