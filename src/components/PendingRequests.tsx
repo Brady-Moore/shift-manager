@@ -6,7 +6,7 @@ type PendingRequestsProps = {
 
 export function PendingRequests({ shiftRequests }: PendingRequestsProps) {
   const pendingRequests = shiftRequests.filter(
-    (request) => request.status === "PENDING",
+    (request) => request.status === "PENDING" && request.claimerId !== null,
   );
 
   return (
@@ -15,7 +15,9 @@ export function PendingRequests({ shiftRequests }: PendingRequestsProps) {
 
       <div className="mt-4 space-y-3">
         {pendingRequests.length === 0 ? (
-          <p className="text-sm text-slate-600">No pending requests.</p>
+          <p className="text-sm text-slate-600">
+            No requests are ready for review.
+          </p>
         ) : (
           pendingRequests.map((request) => (
             <article
@@ -33,9 +35,15 @@ export function PendingRequests({ shiftRequests }: PendingRequestsProps) {
                 {request.shift.endTime.toLocaleTimeString()}
               </p>
 
-              <p className="mt-2 text-sm">
-                Claimed by: {request.claimer?.name ?? "No one yet"}
-              </p>
+              {request.claimer ? (
+                <p className="mt-2 text-sm font-medium text-green-700">
+                  Ready for review • Claimed by {request.claimer.name}
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-amber-700">
+                  Waiting for another employee to claim this shift
+                </p>
+              )}
             </article>
           ))
         )}
