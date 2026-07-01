@@ -14,6 +14,7 @@ import { CreateShift } from "./CreateShift";
 import { MyShifts } from "./MyShifts";
 import { PendingRequests } from "./PendingRequests";
 import { OpenRequests } from "./OpenRequests";
+import { History } from "./History";
 
 type DashboardProps = {
   currentUser: CurrentUser;
@@ -56,6 +57,9 @@ export function Dashboard({
         {activeTab === "Create Shift" && <CreateShift employees={employees} />}
         {activeTab === "My Shifts" && (
           <MyShifts currentUser={currentUser} shifts={shifts} />
+        )}
+        {activeTab === "History" && (
+          <History currentUser={currentUser} shiftRequests={shiftRequests} />
         )}
       </div>
     </main>
