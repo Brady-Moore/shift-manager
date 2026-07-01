@@ -5,6 +5,7 @@ import type { CurrentUser, DashboardData } from "@/app/dashboard/page";
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardNav } from "./DashboardNav";
 import { WeeklySchedule } from "./WeeklySchedule";
+import { CreateShift } from "./CreateShift";
 
 type DashboardProps = {
   currentUser: CurrentUser;
@@ -31,13 +32,8 @@ export function Dashboard({
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-        {activeTab === "Weekly Schedule" ? (
-          <WeeklySchedule shifts={shifts} />
-        ) : (
-          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">{activeTab} Placeholder</h2>
-          </section>
-        )}
+        {activeTab === "Weekly Schedule" && <WeeklySchedule shifts={shifts} />}
+        {activeTab === "Create Shift" && <CreateShift />}
       </div>
     </main>
   );
