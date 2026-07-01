@@ -13,6 +13,7 @@ import { WeeklySchedule } from "./WeeklySchedule";
 import { CreateShift } from "./CreateShift";
 import { MyShifts } from "./MyShifts";
 import { PendingRequests } from "./PendingRequests";
+import { OpenRequests } from "./OpenRequests";
 
 type DashboardProps = {
   currentUser: CurrentUser;
@@ -45,6 +46,12 @@ export function Dashboard({
           <PendingRequests shiftRequests={shiftRequests} />
         )}
         {activeTab === "Weekly Schedule" && <WeeklySchedule shifts={shifts} />}
+        {activeTab === "Open Requests" && (
+          <OpenRequests
+            currentUser={currentUser}
+            shiftRequests={shiftRequests}
+          />
+        )}
         {activeTab === "Create Shift" && <CreateShift employees={employees} />}
         {activeTab === "My Shifts" && (
           <MyShifts currentUser={currentUser} shifts={shifts} />

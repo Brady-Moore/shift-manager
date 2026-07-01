@@ -5,6 +5,53 @@ import { ShiftRequestType } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
+export async function claimShift(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser || currentUser.role !== "EMPLOYEE") {
+    return;
+  }
+
+  const shiftRequestId = formData.get("shiftRequestId");
+
+  if (typeof shiftRequestId !== "string" || shiftRequestId.length === 0) {
+    return;
+  }
+
+  const request = await prisma.shiftRequest.findUnique({
+    where: {
+      id: shiftRequestId,
+    },
+  });
+
+  if (!request) {
+    return;
+  }
+
+  if (request.status !== "PENDING") {
+    return;
+  }
+
+  if (request.requesterId === currentUser.id) {
+    return;
+  }
+
+  if (request.claimerId !== null) {
+    return;
+  }
+
+  await prisma.shiftRequest.update({
+    where: {
+      id: shiftRequestId,
+    },
+    data: {
+      claimerId: currentUser.id,
+    },
+  });
+
+  revalidatePath("/dashboard");
+}
+
 export async function requestCoverage(formData: FormData) {
   const currentUser = await getCurrentUser();
 
