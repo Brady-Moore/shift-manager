@@ -11,6 +11,7 @@ import { DashboardHeader } from "./DashboardHeader";
 import { DashboardNav } from "./DashboardNav";
 import { WeeklySchedule } from "./WeeklySchedule";
 import { CreateShift } from "./CreateShift";
+import { MyShifts } from "./MyShifts";
 
 type DashboardProps = {
   currentUser: CurrentUser;
@@ -41,6 +42,9 @@ export function Dashboard({
         />
         {activeTab === "Weekly Schedule" && <WeeklySchedule shifts={shifts} />}
         {activeTab === "Create Shift" && <CreateShift employees={employees} />}
+        {activeTab === "My Shifts" && (
+          <MyShifts currentUser={currentUser} shifts={shifts} />
+        )}
       </div>
     </main>
   );
