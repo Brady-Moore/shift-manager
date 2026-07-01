@@ -1,4 +1,4 @@
-import { UserRole, ShiftRequestType } from "@prisma/client";
+import { UserRole, ShiftRequestType } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 
 async function main() {
