@@ -1,3 +1,4 @@
+import { claimShift } from "@/app/actions/shiftRequests";
 import type { CurrentUser, ShiftRequests } from "@/app/dashboard/page";
 
 type OpenRequestsProps = {
@@ -42,12 +43,13 @@ export function OpenRequests({
                 {request.shift.endTime.toLocaleTimeString()}
               </p>
 
-              <button
-                type="button"
-                className="mt-3 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-              >
-                Claim Shift
-              </button>
+              <form action={claimShift} className="mt-3">
+                <input type="hidden" name="shiftRequestId" value={request.id} />
+
+                <button type="submit" className="...">
+                  Claim Shift
+                </button>
+              </form>
             </article>
           ))
         )}
