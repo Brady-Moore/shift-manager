@@ -1,21 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import type { CurrentUser, DashboardData } from "@/app/dashboard/page";
+import type {
+  CurrentUser,
+  WeeklyShifts,
+  ShiftRequests,
+  Employees,
+} from "@/app/dashboard/page";
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardNav } from "./DashboardNav";
 import { WeeklySchedule } from "./WeeklySchedule";
+import { CreateShift } from "./CreateShift";
 
 type DashboardProps = {
   currentUser: CurrentUser;
-  shifts: DashboardData["shifts"];
-  shiftRequests: DashboardData["shiftRequests"];
+  shifts: WeeklyShifts;
+  shiftRequests: ShiftRequests;
+  employees: Employees;
 };
 
 export function Dashboard({
   currentUser,
   shifts,
   shiftRequests,
+  employees,
 }: DashboardProps) {
   const defaultTab =
     currentUser.role === "MANAGER" ? "Pending Requests" : "My Shifts";
@@ -31,13 +39,8 @@ export function Dashboard({
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-        {activeTab === "Weekly Schedule" ? (
-          <WeeklySchedule shifts={shifts} />
-        ) : (
-          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">{activeTab} Placeholder</h2>
-          </section>
-        )}
+        {activeTab === "Weekly Schedule" && <WeeklySchedule shifts={shifts} />}
+        {activeTab === "Create Shift" && <CreateShift employees={employees} />}
       </div>
     </main>
   );

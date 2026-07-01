@@ -1,7 +1,7 @@
-import type { DashboardData } from "@/app/dashboard/page";
+import type { WeeklyShifts } from "@/app/dashboard/page";
 
 type WeeklyScheduleProps = {
-  shifts: DashboardData["shifts"];
+  shifts: WeeklyShifts;
 };
 
 export function WeeklySchedule({ shifts }: WeeklyScheduleProps) {
