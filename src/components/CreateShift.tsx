@@ -1,4 +1,10 @@
-export function CreateShift() {
+import type { Employees } from "@/app/dashboard/page";
+
+type CreateShiftProps = {
+  employees: Employees;
+};
+
+export function CreateShift({ employees }: CreateShiftProps) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="text-lg font-semibold">Create Shift</h2>
@@ -33,6 +39,24 @@ export function CreateShift() {
             type="datetime-local"
             className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
           />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-medium text-slate-700">
+            Assigned employee
+          </span>
+          <select
+            name="assignedUserId"
+            className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+            defaultValue=""
+          >
+            <option value="">Open shift</option>
+            {employees.map((employee) => (
+              <option key={employee.id} value={employee.id}>
+                {employee.name}
+              </option>
+            ))}
+          </select>
         </label>
 
         <button

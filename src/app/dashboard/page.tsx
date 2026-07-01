@@ -10,17 +10,15 @@ const adapter = new PrismaPg({
 
 const prisma = new PrismaClient({ adapter });
 
-async function getDashboardData() {
-  const shifts = await prisma.shift.findMany({
-    include: {
-      assignedUser: true,
-    },
-    orderBy: {
-      startTime: "asc",
-    },
+async function getWeeklyShifts() {
+  return prisma.shift.findMany({
+    include: { assignedUser: true },
+    orderBy: { startTime: "asc" },
   });
+}
 
-  const shiftRequests = await prisma.shiftRequest.findMany({
+async function getShiftRequests() {
+  return prisma.shiftRequest.findMany({
     include: {
       shift: {
         include: {
@@ -35,14 +33,23 @@ async function getDashboardData() {
       createdAt: "desc",
     },
   });
-
-  return {
-    shifts,
-    shiftRequests,
-  };
 }
 
-export type DashboardData = Awaited<ReturnType<typeof getDashboardData>>;
+async function getEmployees() {
+  return prisma.user.findMany({
+    where: {
+      role: "EMPLOYEE",
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
+export type WeeklyShifts = Awaited<ReturnType<typeof getWeeklyShifts>>;
+export type ShiftRequests = Awaited<ReturnType<typeof getShiftRequests>>;
+export type Employees = Awaited<ReturnType<typeof getEmployees>>;
+
 export type CurrentUser = NonNullable<
   Awaited<ReturnType<typeof getCurrentUser>>
 >;
@@ -54,13 +61,18 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  const { shifts, shiftRequests } = await getDashboardData();
+  const [shifts, shiftRequests, employees] = await Promise.all([
+    getWeeklyShifts(),
+    getShiftRequests(),
+    getEmployees(),
+  ]);
 
   return (
     <Dashboard
       currentUser={currentUser}
       shifts={shifts}
       shiftRequests={shiftRequests}
+      employees={employees}
     />
   );
 }
