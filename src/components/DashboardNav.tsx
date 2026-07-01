@@ -15,7 +15,7 @@ export function DashboardNav({
 }: DashboardNavProps) {
   const tabs =
     currentUser.role === "MANAGER"
-      ? ["Pending Requests", "Weekly Schedule", "History"]
+      ? ["Pending Requests", "Weekly Schedule", "Create Shift", "History"]
       : ["My Shifts", "Weekly Schedule", "Open Requests", "History"];
 
   return (
