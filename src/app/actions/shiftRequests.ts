@@ -1,9 +1,75 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ShiftRequestType } from "@/generated/prisma/enums";
+import { ShiftRequestType, ShiftRequestStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+
+export async function claimOpenShift(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser || currentUser.role !== "EMPLOYEE") {
+    return;
+  }
+
+  const shiftId = formData.get("shiftId");
+
+  if (typeof shiftId !== "string" || shiftId.length === 0) {
+    return;
+  }
+
+  const shift = await prisma.shift.findUnique({
+    where: { id: shiftId },
+  });
+
+  if (!shift || shift.assignedUserId !== null) {
+    return;
+  }
+
+  await prisma.shift.update({
+    where: { id: shiftId },
+    data: {
+      assignedUserId: currentUser.id,
+    },
+  });
+
+  revalidatePath("/dashboard");
+}
+
+export async function requestCoverage(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser || currentUser.role !== "EMPLOYEE") {
+    return;
+  }
+
+  const shiftId = formData.get("shiftId");
+
+  if (typeof shiftId !== "string" || shiftId.length === 0) {
+    return;
+  }
+
+  const existingRequest = await prisma.shiftRequest.findFirst({
+    where: {
+      shiftId,
+      status: "PENDING",
+    },
+  });
+
+  if (existingRequest) {
+    return;
+  }
+
+  await prisma.shiftRequest.create({
+    data: {
+      type: ShiftRequestType.GIVE_AWAY,
+      shiftId,
+      requesterId: currentUser.id,
+    },
+  });
+
+  revalidatePath("/dashboard");
+}
 
 export async function claimShift(formData: FormData) {
   const currentUser = await getCurrentUser();
@@ -52,35 +118,103 @@ export async function claimShift(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
-export async function requestCoverage(formData: FormData) {
+export async function approveShiftRequest(formData: FormData) {
   const currentUser = await getCurrentUser();
 
-  if (!currentUser || currentUser.role !== "EMPLOYEE") {
+  if (!currentUser || currentUser.role !== "MANAGER") {
     return;
   }
 
-  const shiftId = formData.get("shiftId");
+  const shiftRequestId = formData.get("shiftRequestId");
+  const managerNote = formData.get("managerNote");
 
-  if (typeof shiftId !== "string" || shiftId.length === 0) {
+  if (typeof shiftRequestId !== "string" || shiftRequestId.length === 0) {
     return;
   }
 
-  const existingRequest = await prisma.shiftRequest.findFirst({
+  const request = await prisma.shiftRequest.findUnique({
     where: {
-      shiftId,
-      status: "PENDING",
+      id: shiftRequestId,
     },
   });
 
-  if (existingRequest) {
+  if (!request) {
     return;
   }
 
-  await prisma.shiftRequest.create({
+  if (request.status !== "PENDING" || !request.claimerId) {
+    return;
+  }
+
+  await prisma.$transaction([
+    prisma.shiftRequest.update({
+      where: {
+        id: shiftRequestId,
+      },
+      data: {
+        status: ShiftRequestStatus.APPROVED,
+        reviewedById: currentUser.id,
+        reviewedAt: new Date(),
+        managerNote:
+          typeof managerNote === "string" && managerNote.trim().length > 0
+            ? managerNote.trim()
+            : null,
+      },
+    }),
+
+    prisma.shift.update({
+      where: {
+        id: request.shiftId,
+      },
+      data: {
+        assignedUserId: request.claimerId,
+      },
+    }),
+  ]);
+
+  revalidatePath("/dashboard");
+}
+
+export async function denyShiftRequest(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser || currentUser.role !== "MANAGER") {
+    return;
+  }
+
+  const shiftRequestId = formData.get("shiftRequestId");
+  const managerNote = formData.get("managerNote");
+
+  if (typeof shiftRequestId !== "string" || shiftRequestId.length === 0) {
+    return;
+  }
+
+  const request = await prisma.shiftRequest.findUnique({
+    where: {
+      id: shiftRequestId,
+    },
+  });
+
+  if (!request) {
+    return;
+  }
+
+  if (request.status !== "PENDING" || !request.claimerId) {
+    return;
+  }
+
+  await prisma.shiftRequest.update({
+    where: {
+      id: shiftRequestId,
+    },
     data: {
-      type: ShiftRequestType.GIVE_AWAY,
-      shiftId,
-      requesterId: currentUser.id,
+      status: ShiftRequestStatus.REJECTED,
+      reviewedById: currentUser.id,
+      reviewedAt: new Date(),
+      managerNote:
+        typeof managerNote === "string" && managerNote.trim().length > 0
+          ? managerNote.trim()
+          : null,
     },
   });
 
