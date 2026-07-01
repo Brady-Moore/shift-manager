@@ -50,6 +50,7 @@ export function Dashboard({
           <OpenRequests
             currentUser={currentUser}
             shiftRequests={shiftRequests}
+            shifts={shifts}
           />
         )}
         {activeTab === "Create Shift" && <CreateShift employees={employees} />}
