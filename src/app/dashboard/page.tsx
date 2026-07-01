@@ -1,14 +1,7 @@
 import { redirect } from "next/navigation";
-import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { Dashboard } from "@/components/Dashboard";
-
-const adapter = new PrismaPg({
-  connectionString: process.env["DATABASE_URL"],
-});
-
-const prisma = new PrismaClient({ adapter });
 
 async function getWeeklyShifts() {
   return prisma.shift.findMany({
