@@ -1,36 +1,8 @@
-import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { ManagerDashboard } from "@/components/ManagerDashboard";
-
-const adapter = new PrismaPg({
-  connectionString: process.env["DATABASE_URL"],
-});
-
-const prisma = new PrismaClient({ adapter });
-
-async function getManagerDashboardData() {
-  return prisma.shift.findMany({
-    include: {
-      assignedUser: true,
-      requests: {
-        include: {
-          requester: true,
-          claimer: true,
-        },
-      },
-    },
-    orderBy: {
-      startTime: "asc",
-    },
-  });
-}
-
-export type ManagerDashboardData = Awaited<
-  ReturnType<typeof getManagerDashboardData>
->;
-
-export default async function Home() {
-  const shifts = await getManagerDashboardData();
-
-  return <ManagerDashboard shifts={shifts} />;
+export default function Home() {
+  return (
+    <main className="min-h-screen p-6">
+      <h1 className="text-3xl font-bold">Shift Manager</h1>
+      <p className="mt-2">Demo sign-in will go here.</p>
+    </main>
+  );
 }
