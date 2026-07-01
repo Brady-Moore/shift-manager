@@ -1,15 +1,4 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-async function signOut() {
-  "use server";
-
-  const cookieStore = await cookies();
-
-  cookieStore.delete("demoUserId");
-
-  redirect("/");
-}
+import { signOut } from "@/app/actions/auth";
 
 export function SignOutButton() {
   return (
