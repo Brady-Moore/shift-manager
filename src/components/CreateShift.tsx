@@ -1,4 +1,5 @@
 import type { Employees } from "@/app/dashboard/page";
+import { createShift } from "@/app/actions/shifts";
 
 type CreateShiftProps = {
   employees: Employees;
@@ -12,7 +13,7 @@ export function CreateShift({ employees }: CreateShiftProps) {
         Add a new shift to the weekly schedule.
       </p>
 
-      <form className="mt-6 space-y-4">
+      <form action={createShift} className="mt-6 space-y-4">
         <label className="block">
           <span className="text-sm font-medium text-slate-700">Title</span>
           <input
