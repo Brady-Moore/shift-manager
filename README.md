@@ -14,26 +14,29 @@
   <a href="https://shift-manager-rosy.vercel.app/">Live Demo</a>
 </p>
 
-A full-stack shift management application that allows managers to create and assign shifts while giving employees an easy workflow for requesting and claiming shift coverage.
+ShiftSwap is a full-stack shift management application that streamlines employee shift scheduling and coverage requests. Managers can create, edit, and assign shifts while employees can request coverage, claim available shifts, and track the status of their requests through a complete approval workflow.
 
 ---
 
-## Features
+# Features
 
-### Manager
+## Manager
 
 - Create assigned shifts
 - Create open shifts
-- View weekly schedule
+- Edit existing shifts
+- Delete shifts
+- View the weekly schedule
 - Review claimed shift requests
 - Approve or deny coverage requests
 - Add manager notes when denying requests
 - View request history
 
-### Employee
+## Employee
 
 - View assigned shifts
 - Request shift coverage
+- Cancel pending coverage requests
 - Browse open shifts
 - Claim open shifts
 - Claim another employee's coverage request
@@ -41,53 +44,61 @@ A full-stack shift management application that allows managers to create and ass
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Frontend
+## Frontend
 
 - Next.js (App Router)
 - React
 - TypeScript
 - Tailwind CSS
 
-### Backend
+## Backend
 
 - Next.js Server Actions
 - Prisma ORM
 - PostgreSQL (Neon)
 
-### Deployment
+## Deployment
 
 - Vercel
 
 ---
 
-## Screenshots
+# Screenshots
+
+### Sign In
+
+<img width="468" height="317" alt="image" src="https://github.com/user-attachments/assets/36e8c326-dded-4957-9e3f-1299357d5880" />
 
 
 ### Dashboard
 
+<img width="628" height="560" alt="image" src="https://github.com/user-attachments/assets/68d3b89e-c523-43f3-a19e-a1464f81aa84" />
+
 ### Weekly Schedule
 
-### Request History
+<img width="645" height="431" alt="image" src="https://github.com/user-attachments/assets/ca69105a-413b-4940-bb28-de08448e2497" />
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 src/
 ├── app/
 │   ├── actions/
-│   └── dashboard/
+│   ├── dashboard/
+│   └── page.tsx
 ├── components/
 ├── lib/
-└── generated/
+├── prisma/
+└── public/
 ```
 
 ---
 
-## Shift Coverage Workflow
+# Shift Coverage Workflow
 
 ```text
 Manager creates shift
@@ -96,18 +107,21 @@ Manager creates shift
 Employee requests coverage
         │
         ▼
-Another employee claims request
+Coverage request appears in Open Requests
+        │
+        ▼
+Another employee claims the shift
         │
         ▼
 Manager approves or denies
         │
         ▼
-Shift ownership updated
+Shift assignment updated
 ```
 
 ---
 
-## Local Development
+# Local Development
 
 ```bash
 git clone https://github.com/Brady-Moore/shift-manager.git
@@ -125,7 +139,7 @@ npm run dev
 
 ---
 
-## Environment Variables
+# Environment Variables
 
 ```env
 DATABASE_URL=postgresql://...
@@ -133,20 +147,18 @@ DATABASE_URL=postgresql://...
 
 ---
 
-## Future Improvements
+# Future Improvements
 
-- Edit existing shifts
-- Delete shifts
 - Week-to-week schedule navigation
-- Toast notifications
-- Confirmation dialogs
+- Confirmation dialogs before destructive actions
+- Toast notifications for successful actions
 - Search and filtering
 - Calendar view
 - Unit and integration tests
-- Improved mobile experience
+- Enhanced mobile responsiveness
 
 ---
 
-## Author
+# Author
 
-Brady Moore
+**Brady Moore**
