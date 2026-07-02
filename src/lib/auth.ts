@@ -9,9 +9,14 @@ export async function getCurrentUser() {
     return null;
   }
 
-  return prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
   });
+
+  if (!user) {
+    cookieStore.delete("demoUserId");
+    return null;
+  }
+
+  return user;
 }
