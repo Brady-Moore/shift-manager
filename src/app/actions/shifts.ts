@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function createShift(formData: FormData) {
   const title = formData.get("title");
@@ -41,6 +42,46 @@ export async function createShift(formData: FormData) {
           : null,
     },
   });
+
+  revalidatePath("/dashboard");
+}
+
+export async function deleteShift(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser || currentUser.role !== "MANAGER") {
+    return;
+  }
+
+  const shiftId = formData.get("shiftId");
+
+  if (typeof shiftId !== "string" || shiftId.length === 0) {
+    return;
+  }
+
+  const shift = await prisma.shift.findUnique({
+    where: {
+      id: shiftId,
+    },
+  });
+
+  if (!shift) {
+    return;
+  }
+
+  await prisma.$transaction([
+    prisma.shiftRequest.deleteMany({
+      where: {
+        shiftId,
+      },
+    }),
+
+    prisma.shift.delete({
+      where: {
+        id: shiftId,
+      },
+    }),
+  ]);
 
   revalidatePath("/dashboard");
 }
