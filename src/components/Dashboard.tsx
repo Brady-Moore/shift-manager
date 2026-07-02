@@ -47,7 +47,11 @@ export function Dashboard({
           <PendingRequests shiftRequests={shiftRequests} />
         )}
         {activeTab === "Weekly Schedule" && (
-          <WeeklySchedule currentUser={currentUser} shifts={shifts} />
+          <WeeklySchedule
+            currentUser={currentUser}
+            shifts={shifts}
+            employees={employees}
+          />
         )}
         {activeTab === "Open Requests" && (
           <OpenRequests
