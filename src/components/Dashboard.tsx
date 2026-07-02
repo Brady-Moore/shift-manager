@@ -56,7 +56,11 @@ export function Dashboard({
         )}
         {activeTab === "Create Shift" && <CreateShift employees={employees} />}
         {activeTab === "My Shifts" && (
-          <MyShifts currentUser={currentUser} shifts={shifts} />
+          <MyShifts
+            currentUser={currentUser}
+            shifts={shifts}
+            shiftRequests={shiftRequests}
+          />
         )}
         {activeTab === "History" && (
           <History currentUser={currentUser} shiftRequests={shiftRequests} />

@@ -1,12 +1,21 @@
-import type { CurrentUser, WeeklyShifts } from "@/app/dashboard/page";
+import type {
+  CurrentUser,
+  WeeklyShifts,
+  ShiftRequests,
+} from "@/app/dashboard/page";
 import { requestCoverage } from "@/app/actions/shiftRequests";
 
 type MyShiftsProps = {
   currentUser: CurrentUser;
   shifts: WeeklyShifts;
+  shiftRequests: ShiftRequests;
 };
 
-export function MyShifts({ currentUser, shifts }: MyShiftsProps) {
+export function MyShifts({
+  currentUser,
+  shifts,
+  shiftRequests,
+}: MyShiftsProps) {
   const myShifts = shifts.filter(
     (shift) => shift.assignedUserId === currentUser.id,
   );
@@ -21,28 +30,46 @@ export function MyShifts({ currentUser, shifts }: MyShiftsProps) {
             You do not have any assigned shifts.
           </p>
         ) : (
-          myShifts.map((shift) => (
-            <article
-              key={shift.id}
-              className="rounded border border-slate-200 p-3"
-            >
-              <h3 className="font-medium">{shift.title}</h3>
-              <p className="text-sm text-slate-600">
-                {shift.startTime.toLocaleString()} –{" "}
-                {shift.endTime.toLocaleTimeString()}
-              </p>
-              <form action={requestCoverage} className="mt-3">
-                <input type="hidden" name="shiftId" value={shift.id} />
+          myShifts.map((shift) => {
+            const pendingRequest = shiftRequests.find(
+              (request) =>
+                request.shiftId === shift.id &&
+                request.requesterId === currentUser.id &&
+                request.status === "PENDING",
+            );
 
-                <button
-                  type="submit"
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
-                  Request Coverage
-                </button>
-              </form>
-            </article>
-          ))
+            return (
+              <article
+                key={shift.id}
+                className="rounded border border-slate-200 p-3"
+              >
+                <h3 className="font-medium">{shift.title}</h3>
+
+                <p className="text-sm text-slate-600">
+                  {shift.startTime.toLocaleString()} –{" "}
+                  {shift.endTime.toLocaleTimeString()}
+                </p>
+
+                {pendingRequest ? (
+                  <div className="mt-3 rounded-md bg-amber-50 p-3 text-sm">
+                    Coverage request sent.
+                    {/* Cancel button*/}
+                  </div>
+                ) : (
+                  <form action={requestCoverage} className="mt-3">
+                    <input type="hidden" name="shiftId" value={shift.id} />
+
+                    <button
+                      type="submit"
+                      className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                    >
+                      Request Coverage
+                    </button>
+                  </form>
+                )}
+              </article>
+            );
+          })
         )}
       </div>
     </section>
