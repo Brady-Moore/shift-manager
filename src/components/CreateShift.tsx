@@ -21,6 +21,17 @@ export function CreateShift({ employees }: CreateShiftProps) {
             type="text"
             placeholder="Morning Register"
             className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+            required
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-medium text-slate-700">Date</span>
+          <input
+            name="shiftDate"
+            type="date"
+            className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+            required
           />
         </label>
 
@@ -28,8 +39,9 @@ export function CreateShift({ employees }: CreateShiftProps) {
           <span className="text-sm font-medium text-slate-700">Start time</span>
           <input
             name="startTime"
-            type="datetime-local"
+            type="time"
             className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+            required
           />
         </label>
 
@@ -37,8 +49,9 @@ export function CreateShift({ employees }: CreateShiftProps) {
           <span className="text-sm font-medium text-slate-700">End time</span>
           <input
             name="endTime"
-            type="datetime-local"
+            type="time"
             className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+            required
           />
         </label>
 
