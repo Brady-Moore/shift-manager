@@ -1,8 +1,20 @@
-# ShiftSwap
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/112e516d-a458-4911-ae0e-17f49b56d509"
+    alt="ShiftSwap"
+    width="400"
+  />
+</p>
+
+<p align="center">
+  <strong>A full-stack shift management application built with Next.js, Prisma, and PostgreSQL.</strong>
+</p>
+
+<p align="center">
+  <a href="https://shift-manager-rosy.vercel.app/">Live Demo</a>
+</p>
 
 A full-stack shift management application that allows managers to create and assign shifts while giving employees an easy workflow for requesting and claiming shift coverage.
-
-**Live Demo:** [https://your-app.vercel.app](https://shift-manager-rosy.vercel.app/)
 
 ---
 
@@ -100,7 +112,11 @@ Shift ownership updated
 ```bash
 git clone https://github.com/Brady-Moore/shift-manager.git
 
+cd shift-manager
+
 npm install
+
+npx prisma generate
 
 npx prisma migrate dev
 
@@ -112,7 +128,7 @@ npm run dev
 ## Environment Variables
 
 ```env
-DATABASE_URL=
+DATABASE_URL=postgresql://...
 ```
 
 ---
