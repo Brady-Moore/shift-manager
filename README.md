@@ -150,5 +150,3 @@ DATABASE_URL=postgresql://...
 ## Author
 
 Brady Moore
-
-GitHub: https://github.com/yourusername
