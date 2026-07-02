@@ -40,8 +40,8 @@ export function PendingRequests({ shiftRequests }: PendingRequestsProps) {
               </p>
 
               {request.claimer ? (
-                <p className="mt-2 text-sm font-medium text-green-700">
-                  Ready for review • Claimed by {request.claimer.name}
+                <p className="mt-2 text-sm font-medium text-slate-700">
+                  Claimed by {request.claimer.name}
                 </p>
               ) : (
                 <p className="mt-2 text-sm text-amber-700">
@@ -54,7 +54,7 @@ export function PendingRequests({ shiftRequests }: PendingRequestsProps) {
 
                 <button
                   type="submit"
-                  className="rounded-md bg-green-700 px-3 py-2 text-sm font-medium text-white hover:bg-green-800"
+                  className="rounded-md bg-teal-600 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800"
                 >
                   Approve
                 </button>

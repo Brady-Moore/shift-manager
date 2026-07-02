@@ -1,12 +1,24 @@
-import type { CurrentUser, WeeklyShifts } from "@/app/dashboard/page";
-import { requestCoverage } from "@/app/actions/shiftRequests";
+import type {
+  CurrentUser,
+  WeeklyShifts,
+  ShiftRequests,
+} from "@/app/dashboard/page";
+import {
+  cancelCoverageRequest,
+  requestCoverage,
+} from "@/app/actions/shiftRequests";
 
 type MyShiftsProps = {
   currentUser: CurrentUser;
   shifts: WeeklyShifts;
+  shiftRequests: ShiftRequests;
 };
 
-export function MyShifts({ currentUser, shifts }: MyShiftsProps) {
+export function MyShifts({
+  currentUser,
+  shifts,
+  shiftRequests,
+}: MyShiftsProps) {
   const myShifts = shifts.filter(
     (shift) => shift.assignedUserId === currentUser.id,
   );
@@ -21,28 +33,66 @@ export function MyShifts({ currentUser, shifts }: MyShiftsProps) {
             You do not have any assigned shifts.
           </p>
         ) : (
-          myShifts.map((shift) => (
-            <article
-              key={shift.id}
-              className="rounded border border-slate-200 p-3"
-            >
-              <h3 className="font-medium">{shift.title}</h3>
-              <p className="text-sm text-slate-600">
-                {shift.startTime.toLocaleString()} –{" "}
-                {shift.endTime.toLocaleTimeString()}
-              </p>
-              <form action={requestCoverage} className="mt-3">
-                <input type="hidden" name="shiftId" value={shift.id} />
+          myShifts.map((shift) => {
+            const pendingRequest = shiftRequests.find(
+              (request) =>
+                request.shiftId === shift.id &&
+                request.requesterId === currentUser.id &&
+                request.status === "PENDING",
+            );
 
-                <button
-                  type="submit"
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
-                  Request Coverage
-                </button>
-              </form>
-            </article>
-          ))
+            return (
+              <article
+                key={shift.id}
+                className="rounded border border-slate-200 p-3"
+              >
+                <h3 className="font-medium">{shift.title}</h3>
+
+                <p className="text-sm text-slate-600">
+                  {shift.startTime.toLocaleString()} –{" "}
+                  {shift.endTime.toLocaleTimeString()}
+                </p>
+
+                {pendingRequest ? (
+                  <div className="flex items-center gap-2 rounded-md border border-teal-500 p-3">
+                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+
+                    <p className="text-sm font-medium text-amber-800">
+                      Coverage request pending
+                    </p>
+
+                    <form action={cancelCoverageRequest} className="ml-auto">
+                      <input
+                        type="hidden"
+                        name="requestId"
+                        value={pendingRequest.id}
+                      />
+
+                      <button
+                        type="submit"
+                        className="rounded-md border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+                      >
+                        Cancel Request
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 rounded-md p-2">
+                    <form action={requestCoverage} className="mt-2">
+                      <input type="hidden" name="shiftId" value={shift.id} />
+
+                      <button
+                        type="submit"
+                        className="rounded-md border border-teal-500 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                      >
+                        Request Coverage
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </article>
+            );
+          })
         )}
       </div>
     </section>

@@ -51,7 +51,7 @@ export function OpenRequests({
 
                     <button
                       type="submit"
-                      className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                      className="rounded-md border border-teal-500 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                     >
                       Claim Open Shift
                     </button>
@@ -91,7 +91,7 @@ export function OpenRequests({
 
                 <button
                   type="submit"
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                  className="rounded-md border border-teal-500 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                 >
                   Claim Shift
                 </button>

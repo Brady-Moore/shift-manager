@@ -220,3 +220,46 @@ export async function denyShiftRequest(formData: FormData) {
 
   revalidatePath("/dashboard");
 }
+
+export async function cancelCoverageRequest(formData: FormData) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return;
+  }
+
+  const requestId = formData.get("requestId");
+
+  if (typeof requestId !== "string" || requestId.length === 0) {
+    return;
+  }
+
+  const request = await prisma.shiftRequest.findUnique({
+    where: {
+      id: requestId,
+    },
+  });
+
+  if (!request) {
+    return;
+  }
+
+  if (request.requesterId !== currentUser.id) {
+    return;
+  }
+
+  if (request.status !== "PENDING") {
+    return;
+  }
+
+  await prisma.shiftRequest.update({
+    where: {
+      id: request.id,
+    },
+    data: {
+      status: "CANCELLED",
+    },
+  });
+
+  revalidatePath("/dashboard");
+}
