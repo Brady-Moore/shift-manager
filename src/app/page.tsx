@@ -31,12 +31,16 @@ export default async function Home() {
     <main className="min-h-screen bg-slate-100 p-4 text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-md items-center">
         <section className="w-full rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <h1 className="text-3xl font-bold">Shift Manager</h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <img
+            src="/shiftswap-logo.png"
+            alt="ShiftSwap"
+            className="h-16 w-auto mx-auto"
+          />
+          <p className="mt-3 text-center text-sm text-slate-600">
             Select a demo user to continue.
           </p>
 
-          <form action={signIn} className="mt-8 space-y-4">
+          <form action={signIn} className="mt-6 space-y-4">
             <label className="block">
               <span className="text-sm font-medium text-slate-700">
                 Continue as
